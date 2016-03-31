@@ -28,10 +28,11 @@ Connects a React component to the store. This wraps the component and makes sure
 function mapKeyPathsToProps(ownProps) {
   return { todos: ["todos", ownProps.todo_id] }
 }
+```
 
 ### `Store`
 
-Create a store instance and hold on to it. You can pass this instance into `StoreContext` so that it's available to all components.
+Create a store instance and hold on to it. You can pass this instance into `StoreContext` so that it is available to all components.
 
 #### `set(keyPath, value)`
 
