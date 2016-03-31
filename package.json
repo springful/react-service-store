@@ -1,10 +1,10 @@
 {
   "name": "react-service-store",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple mechanism to have service calls transparently update React components.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "NODE_ENV=production webpack",
+    "build": "NODE_ENV=production webpack -p",
     "prepublish": "npm run build"
   },
   "repository": {
