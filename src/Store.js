@@ -42,6 +42,9 @@ export default class Store {
       if (OrderedMap.isOrderedMap(result)) {
         return result.toArray().map(item => item.toJS());
       }
+      if (typeof(result) !== "object") {
+        return result;
+      }
       return result.toJS();
     }
   }
