@@ -17,14 +17,14 @@ export default class Store {
     }
 
     this.entries = this.entries.setIn(keyPath, value);
-    this.notifySubscribers(keyPath, value, previousValue ? previousValue.toJS() : undefined);
+    this.notifySubscribers(keyPath, value, previousValue);
   }
 
   remove(keyPath) {
     const previousValue = this.entries.getIn(keyPath);
     if (previousValue) {
       this.entries = this.entries.deleteIn(keyPath);
-      this.notifySubscribers(keyPath, undefined, previousValue.toJS());
+      this.notifySubscribers(keyPath, undefined, previousValue);
     }
   }
 
