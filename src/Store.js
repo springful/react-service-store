@@ -1,6 +1,8 @@
 import Immutable, { OrderedMap, Set, Map, fromJS } from "immutable";
 import invariant from "invariant";
 
+import shallowEqual from "./shallowEqual";
+
 export default class Store {
   constructor(initialState) {
     this.entries = Map(fromJS(initialState));
@@ -8,23 +10,13 @@ export default class Store {
   }
 
   set(keyPath, value, opt_id_key) {
-    let newValue;
-    if (Array.isArray(value)) {
-      invariant(opt_id_key, "Setting arrays requires supplying a key for uniquely identifying each item in the array");
-      newValue = OrderedMap(value.map(item => {
-        return [item[opt_id_key], fromJS(item)];
-      }));
-    } else {
-      newValue = fromJS(value);
-    }
+    invariant(keyPath && keyPath.length, "You must provide a key path with at least one part");
     const previousValue = this.entries.getIn(keyPath);
-    if (Immutable.is(newValue, previousValue)) {
+    if (previousValue && shallowEqual(value, previousValue)) {
       return;
     }
 
-    this.entries = this.entries.updateIn(keyPath, value => {
-      return newValue;
-    });
+    this.entries = this.entries.setIn(keyPath, value);
     this.notifySubscribers(keyPath, value, previousValue ? previousValue.toJS() : undefined);
   }
 
@@ -37,16 +29,7 @@ export default class Store {
   }
 
   get(keyPath) {
-    const result = this.entries.getIn(keyPath);
-    if (result) {
-      if (OrderedMap.isOrderedMap(result)) {
-        return result.toArray().map(item => item.toJS());
-      }
-      if (typeof(result) !== "object") {
-        return result;
-      }
-      return result.toJS();
-    }
+    return this.entries.getIn(keyPath);
   }
 
   subscribe(keyPath, handler) {
